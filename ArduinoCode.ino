@@ -91,7 +91,7 @@ void loop() {
     digitalWrite(LED2, LOW);
   }
 
-  if(Gate1OpenMillis > 0 && Gate2OpenMillis > 0) { // a led to indicate the reset status
+  if(Gate1OpenMillis > 0 || Gate2OpenMillis > 0) { // a led to indicate the reset status
     digitalWrite(LED3, HIGH);
   }
   else {
