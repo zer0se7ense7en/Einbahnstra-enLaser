@@ -1,9 +1,9 @@
-
 const int buzzer = 8;
 const int LightSensor1 = A1;
 const int LightSensor2 = A2;
 const int LED1 = 3;
 const int LED2 = 4;
+const int LED3 = 5;
 
 const int ThresholdSensor1 = 750;
 const int ThresholdSensor2 = 800;
@@ -25,10 +25,11 @@ void setup() {
   pinMode(A1, INPUT);
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
 
 }
 
-
+// maybe reset both when one is over 3000?!?!?!?!?!?!?!??!??!!?!   : line 174
 void siren(int iterations) {
   for(int i = 0; i < iterations; i++) {
     // Whoop up
@@ -90,6 +91,12 @@ void loop() {
     digitalWrite(LED2, LOW);
   }
 
+  if(Gate1OpenMillis > 0 && Gate2OpenMillis > 0) { // a led to indicate the reset status
+    digitalWrite(LED3, HIGH);
+  }
+  else {
+    digitalWrite(LED3, LOW);
+  }
   delay(50);
 
   if(Gate1OpenMillis < Gate2OpenMillis && Gate1OpenMillis > 0 && Gate2OpenMillis > 0) {
