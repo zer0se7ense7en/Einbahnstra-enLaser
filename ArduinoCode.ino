@@ -1,9 +1,11 @@
+
 const int buzzer = 8;
 const int LightSensor1 = A1;
 const int LightSensor2 = A2;
 const int LED1 = 3;
 const int LED2 = 4;
 const int LED3 = 5;
+const int ButtonPin = 2;
 
 const int ThresholdSensor1 = 750;
 const int ThresholdSensor2 = 800;
@@ -18,6 +20,7 @@ int FirstOpen;
 
 bool Gate1Open;
 bool Gate2Open;
+bool Intruder;
 
 void setup() {
   Serial.begin(115200);
@@ -26,6 +29,7 @@ void setup() {
   pinMode(LED1, OUTPUT);
   pinMode(LED2, OUTPUT);
   pinMode(LED3, OUTPUT);
+  pinMode(ButtonPin, INPUT);
 
 }
 
@@ -52,8 +56,8 @@ void loop() {
   Sensor1Read = analogRead(LightSensor1);
   Sensor2Read = analogRead(LightSensor2);
 
-  Serial.print("Sensor1: ");Serial.println(Sensor1Read);
-  Serial.print("Sensor2: ");Serial.println(Sensor2Read);
+//  Serial.print("Sensor1: ");Serial.println(Sensor1Read);
+//  Serial.print("Sensor2: ");Serial.println(Sensor2Read);
 
   if(Sensor1Read > ThresholdSensor1) {
     Gate1Open = false;
@@ -105,12 +109,19 @@ void loop() {
   else if (Gate1OpenMillis > Gate2OpenMillis && Gate1OpenMillis > 0 && Gate2OpenMillis > 0){
     FirstOpen = 0;
   }
-  Serial.print("currentMillis: ");Serial.println(currentMillis);
-  Serial.print("FirstOpen: ");Serial.println(FirstOpen);
-  Serial.print("Gate1OpenMillis: ");Serial.println(Gate1OpenMillis);
-  Serial.print("Gate2openMillis: ");Serial.println(Gate2OpenMillis);
-  Serial.println();
+//  Serial.print("currentMillis: ");Serial.println(currentMillis);
+//  Serial.print("FirstOpen: ");Serial.println(FirstOpen);
+//  Serial.print("Gate1OpenMillis: ");Serial.println(Gate1OpenMillis);
+//  Serial.print("Gate2openMillis: ");Serial.println(Gate2OpenMillis);
+//  Serial.println();
   if(FirstOpen == 1 && Gate2OpenMillis - Gate1OpenMillis > DifferenceThreshold && Gate2OpenMillis > 0) { // adapt DifferenceThreshold according to parallel distance between lasers
-    siren(3);
+    Intruder = false;
+  }
+
+  while(!Intruder) {
+    siren(1);
+    Intruder = digitalRead(ButtonPin);
+    Serial.println(Intruder);
   }
 }
+
